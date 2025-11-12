@@ -8,7 +8,7 @@
         public Usuario(string nombre)
         {
             if (string.IsNullOrWhiteSpace(nombre)) 
-                throw new ArgumentException("Nombre no puede estar vacío.");
+                throw new ArgumentException("Como?");
            
             Nombre = nombre;
             ListasReproduccion = new Dictionary<string, List<Cancion>>(StringComparer.OrdinalIgnoreCase);
@@ -18,7 +18,7 @@
         {
             if (string.IsNullOrWhiteSpace(nombreLista))
             {
-                mensaje = "El nombre de la lista no puede estar vacío.";
+                mensaje = "Necesito un nombre de la lista.";
                 return false;
             }
 
@@ -29,14 +29,14 @@
             }
 
             ListasReproduccion[nombreLista] = new List<Cancion>(); 
-            mensaje = $"Lista '{nombreLista}' creada correctamente.";
+            mensaje = $"Lista '{nombreLista}' creada mai.";
             return true;
         }
 
         public bool AgregarCancionALista(string nombreLista, Cancion cancion, out string mensaje)
         {
             if (cancion == null) 
-                throw new ArgumentNullException("");
+                throw new ArgumentNullException("Nada");
 
             if (!ListasReproduccion.TryGetValue(nombreLista, out var lista))
             {
@@ -59,7 +59,7 @@
             {
                 sb.AppendLine($"Lista: {kv.Key}"); // Nombre de la lista
                 if (kv.Value.Count == 0) 
-                    sb.AppendLine("");
+                    sb.AppendLine("NO");
                 else
                 {
                     foreach (var c in kv.Value)

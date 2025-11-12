@@ -2,18 +2,20 @@
 {
     public class Cancion
     {
+        // Atributos
         public string Nombre { get; set;  }
         public string Artista { get; set;  }
         public int DuracionSegundos { get; set; }
 
+        // Constructor
         public Cancion(string nombre, string artista, int duracionSegundos)
         {
             if (string.IsNullOrWhiteSpace(nombre)) 
-                throw new ArgumentException("Nombre no puede estar vacío.");
+                throw new ArgumentException("No puede estar vacio");
             if (string.IsNullOrWhiteSpace(artista)) 
-                throw new ArgumentException("Artista no puede estar vacío.");
+                throw new ArgumentException("Tampoco puede estar vacio");
             if (duracionSegundos < 0) 
-                throw new ArgumentOutOfRangeException("Duración no puede ser negativa.");
+                throw new ArgumentOutOfRangeException("nmms");
 
             Nombre = nombre;
             Artista = artista;

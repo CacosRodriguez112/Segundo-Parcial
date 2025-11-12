@@ -20,7 +20,7 @@ namespace MusicManager.Sevice
         {
             Usuario nuevoUsuario = new Usuario(nombre);
             Usuarios.Add(nuevoUsuario);
-            Console.WriteLine($"Usuario '{nombre}' registrado exitosamente.");
+            Console.WriteLine($"Usuario '{nombre}' registrado.");
         }
 
         public Usuario BuscarUsuario(string nombre)

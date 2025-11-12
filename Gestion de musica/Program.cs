@@ -1,5 +1,6 @@
 ﻿using MusicManager.Models;
 using MusicManager.Sevice;
+using MusicManager.Gestores;
 
 
 // 1- Inicialización
@@ -19,17 +20,30 @@ gestor.AgregarCancion(new Cancion("Si nos dejan", "Luis Miguel", 156));
 // 2- Registro Usuario
 Console.WriteLine("--- REGISTRO DE USUARIO ---");
 Console.Write("Por favor, ingrese su nombre de usuario: ");
-string nombreUsuario = Console.ReadLine();
+
+string nombreUsuario = Console.ReadLine() ?? "";
+
 servicioMusica.RegistrarUsuario(nombreUsuario);
 Console.WriteLine($"\n¡Bienvenido, {nombreUsuario}!");
 
 
 //3- Creación Lista
-Console.WriteLine("\n--- CREACIÓN DE LISTA DE REPRODUCCIÓN ---");
-Console.Write("Ingrese un nombre para su primera lista de reproducción: ");
-string nombreLista = Console.ReadLine();
-usuario.CrearListaReproduccion(nombreLista);
-Console.WriteLine($"Lista '{nombreLista}' creada.");
+Console.Write("\nIngrese el nombre de su primera lista de reproducción: ");
+
+string nombreLista = Console.ReadLine() ?? "";
+
+Usuario usuario = servicioMusica.BuscarUsuario(nombreUsuario);
+if (usuario.CrearListaReproduccion(nombreLista, out string mensajeLista))
+{
+    Console.WriteLine(mensajeLista);
+}
+else
+{
+    Console.WriteLine(mensajeLista);
+    nombreLista = "Lista por defecto";
+    usuario.CrearListaReproduccion(nombreLista, out _);
+    Console.WriteLine($"Se ha creado una lista por defecto llamada '{nombreLista}'.");
+}
 
 
 // 4- Menu Principal
@@ -39,7 +53,7 @@ while (!salir)
 {
     Console.WriteLine("\n--- MENÚ PRINCIPAL ---");
     Console.WriteLine($"Usuario actual: {usuario.Nombre}");
-    Console.WriteLine($"Lista actual: '{nombreLista}' ({CancionesDisponibles.Count} canciones)");
+    Console.WriteLine($"Lista actual: {nombreLista} ({gestor.CancionesDisponibles.Count} canciones)");
     Console.WriteLine("1. Buscar canciones para agregar a mi lista");
     Console.WriteLine("2. Ver mi lista de reproducción (ordenada por duración)");
     Console.WriteLine("3. Ver todas las canciones disponibles");
@@ -48,7 +62,7 @@ while (!salir)
     Console.WriteLine("6. Salir");
     Console.Write("Seleccione una opción: ");
 
-    string opcion = Console.ReadLine();
+    string opcion = Console.ReadLine() ?? "";
 
     switch (opcion)
     {

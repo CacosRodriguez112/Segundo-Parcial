@@ -14,7 +14,7 @@ namespace MusicManager.Gestores
         public void AgregarCancion(Cancion cancion)
         {
             if (cancion == null) 
-                throw new ArgumentNullException("");
+                throw new ArgumentNullException("no");
 
             CancionesDisponibles.Add(cancion);
         }
@@ -69,7 +69,7 @@ namespace MusicManager.Gestores
         public string MostrarCancionesDisponibles()
         {
             if (CancionesDisponibles.Count == 0) 
-                return "No hay canciones disponibles.";
+                return "No hay rolas w.";
 
             var sb = new System.Text.StringBuilder(); // Usar StringBuilder para eficiencia
             for (int i = 0; i < CancionesDisponibles.Count; i++)
