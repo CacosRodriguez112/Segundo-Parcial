@@ -19,53 +19,51 @@ namespace MusicManager.Gestores
             CancionesDisponibles.Add(cancion);
         }
 
-        public List<Cancion> BuscarPorNombre(string termino)
+        public List<Cancion> BuscarPorNombre(string ya)
         {
-            if (string.IsNullOrWhiteSpace(termino)) 
+            if (string.IsNullOrWhiteSpace(ya)) 
                 return new List<Cancion>();
 
             return CancionesDisponibles
-                .Where(c => c.Nombre.IndexOf(termino, StringComparison.OrdinalIgnoreCase) >= 0)
+                .Where(c => c.Nombre.IndexOf(ya, StringComparison.OrdinalIgnoreCase) >= 0) // búsqueda sin distinción de mayúsculas/minúsculas
                 .ToList();
         }
 
         // QuickSort por DuracionSegundos (ascendente)
         public void QuickSort(List<Cancion> lista, int low, int high)
         {
-            if (lista == null) 
+            if (lista == null)
                 throw new ArgumentNullException("");
 
-            if (low < 0 || high >= lista.Count) { /* permitir que se use con (0, Count-1) normalmente */ }
+            if (low >= high) 
+                return;
 
-            if (low < high)
-            {
-                int pi = Partition(lista, low, high);
-                QuickSort(lista, low, pi - 1);
-                QuickSort(lista, pi + 1, high);
-            }
-        }
+            int pivotIndex = (low + high) / 2;
+            int pivotValue = lista[pivotIndex].DuracionSegundos;
 
-        private int Partition(List<Cancion> lista, int low, int high)
-        {
-            var pivot = lista[high].DuracionSegundos;
-            int i = low - 1;
-            for (int j = low; j <= high - 1; j++)
+            int i = low, j = high;
+            while (i <= j)
             {
-                if (lista[j].DuracionSegundos <= pivot)
-                {
+                while (lista[i].DuracionSegundos < pivotValue) 
                     i++;
+                while (lista[j].DuracionSegundos > pivotValue) 
+                    j--;
+
+                if (i <= j)
+                {
                     Swap(lista, i, j);
+                    i++;
+                    j--;
                 }
             }
-            Swap(lista, i + 1, high);
-            return i + 1;
+
+            if (low < j) QuickSort(lista, low, j);
+            if (i < high) QuickSort(lista, i, high);
         }
 
         private void Swap(List<Cancion> lista, int i, int j)
         {
-            var temp = lista[i];
-            lista[i] = lista[j];
-            lista[j] = temp;
+            throw new NotImplementedException();
         }
 
         public string MostrarCancionesDisponibles()
@@ -79,14 +77,6 @@ namespace MusicManager.Gestores
                 sb.AppendLine($"{i + 1}. {CancionesDisponibles[i].ToString()}");
             }
             return sb.ToString().TrimEnd();
-        }
-
-        // Helper para ordenar el catálogo completo por duración (uso externo)
-        public void OrdenarCatalogoPorDuracion()
-        {
-            if (CancionesDisponibles.Count <= 1) 
-                return;
-            QuickSort(CancionesDisponibles, 0, CancionesDisponibles.Count - 1);
-        }
+        }   
     }
 }

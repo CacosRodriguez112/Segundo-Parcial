@@ -59,7 +59,7 @@
             {
                 sb.AppendLine($"Lista: {kv.Key}"); // Nombre de la lista
                 if (kv.Value.Count == 0) 
-                    sb.AppendLine("  (vacía)");
+                    sb.AppendLine("");
                 else
                 {
                     foreach (var c in kv.Value)
