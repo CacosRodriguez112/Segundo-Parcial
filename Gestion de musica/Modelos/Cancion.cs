@@ -23,7 +23,7 @@
         public override string ToString()
         {
             int minutos = DuracionSegundos / 60;
-            int segundos = DuracionSegundos % 60;
+            int segundos = DuracionSegundos % 60; // Formatear segundos con dos dígitos
             return $"{Nombre} - {Artista} ({minutos}:{segundos:D2})";
         }
     }

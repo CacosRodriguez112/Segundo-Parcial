@@ -28,14 +28,15 @@
                 return false;
             }
 
-            ListasReproduccion[nombreLista] = new List<Cancion>();
+            ListasReproduccion[nombreLista] = new List<Cancion>(); 
             mensaje = $"Lista '{nombreLista}' creada correctamente.";
             return true;
         }
 
         public bool AgregarCancionALista(string nombreLista, Cancion cancion, out string mensaje)
         {
-            if (cancion == null) throw new ArgumentNullException(nameof(cancion));
+            if (cancion == null) 
+                throw new ArgumentNullException("");
 
             if (!ListasReproduccion.TryGetValue(nombreLista, out var lista))
             {
@@ -50,13 +51,15 @@
 
         public string MostrarListasReproduccion()
         {
-            if (ListasReproduccion.Count == 0) return "No hay listas de reproducción.";
+            if (ListasReproduccion.Count == 0) 
+                return "No hay listas de reproducción.";
 
-            var sb = new System.Text.StringBuilder();
-            foreach (var kv in ListasReproduccion)
+            var sb = new System.Text.StringBuilder(); // Usar StringBuilder para eficiencia
+            foreach (var kv in ListasReproduccion) // Iterar sobre cada par clave-valor en el diccionario
             {
-                sb.AppendLine($"Lista: {kv.Key}");
-                if (kv.Value.Count == 0) sb.AppendLine("  (vacía)");
+                sb.AppendLine($"Lista: {kv.Key}"); // Nombre de la lista
+                if (kv.Value.Count == 0) 
+                    sb.AppendLine("  (vacía)");
                 else
                 {
                     foreach (var c in kv.Value)
