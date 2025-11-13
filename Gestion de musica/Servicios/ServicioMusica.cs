@@ -25,7 +25,7 @@ namespace MusicManager.Sevice
 
         public Usuario BuscarUsuario(string nombre)
         {
-            return Usuarios.FirstOrDefault(p => p.Nombre.ToLower() == nombre.ToLower());
+            return Usuarios.FirstOrDefault(u => u.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

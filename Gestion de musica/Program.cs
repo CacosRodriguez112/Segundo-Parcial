@@ -22,7 +22,11 @@ Console.WriteLine("--- REGISTRO DE USUARIO ---");
 Console.Write("Por favor, ingrese su nombre de usuario: ");
 
 string nombreUsuario = Console.ReadLine() ?? "";
-
+if (string.IsNullOrWhiteSpace(nombreUsuario))
+{
+    nombreUsuario = "Usuario_Por_Defecto";
+    Console.WriteLine($"Como no ingresaste nada, te llamaras: {nombreUsuario}");
+}
 servicioMusica.RegistrarUsuario(nombreUsuario);
 Console.WriteLine($"\n¡Bienvenido, {nombreUsuario}!");
 
@@ -33,17 +37,18 @@ Console.Write("\nIngrese el nombre de su primera lista de reproducción: ");
 string nombreLista = Console.ReadLine() ?? "";
 
 Usuario usuario = servicioMusica.BuscarUsuario(nombreUsuario);
-if (usuario.CrearListaReproduccion(nombreLista, out string mensajeLista))
+if (usuario.CrearListaReproduccion(nombreLista, out string mensajeCrearLista))
 {
-    Console.WriteLine(mensajeLista);
+    Console.WriteLine(mensajeCrearLista);
 }
 else
 {
-    Console.WriteLine(mensajeLista);
-    nombreLista = "Lista por defecto";
+    Console.WriteLine(mensajeCrearLista);
+    nombreLista = "Lista_Por_Defecto";
     usuario.CrearListaReproduccion(nombreLista, out _);
-    Console.WriteLine($"Se ha creado una lista por defecto llamada '{nombreLista}'.");
+    Console.WriteLine($"Se ha creado una lista por defecto llamada: {nombreLista}");
 }
+
 
 
 // 4- Menu Principal
@@ -67,8 +72,42 @@ while (!salir)
     switch (opcion)
     {
         case "1":
-            
-            break;
+            Console.Write("Término de búsqueda: ");
+            string termino = Console.ReadLine() ?? "";
+            var resultados = gestor.BuscarPorNombre(termino); // Obtener resultados de búsqueda
+
+            if (resultados.Count == 0)
+            {
+                Console.WriteLine("No se encontraron canciones.");
+                break;
+            }
+            Console.WriteLine("Canciones encontradas:");
+            for (int i = 0; i < resultados.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. {resultados[i]}");
+            }
+
+            Console.Write("Selecciona el número de la canción para agregar u otra tecla para cancelar: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int sel) || sel > resultados.Count || sel < 0)
+            {
+                Console.WriteLine("Canceled");
+                break;
+            }
+
+            Console.Write("A qué lista la quieres agregar? ");
+            string listaDestino = Console.ReadLine() ?? "";
+            if (listaDestino != nombreLista)
+            {
+                Console.WriteLine("Solo puedes agregar a la lista actual.");
+            }
+            else
+            {
+                
+            }
+
+
+                break;
         case "2":
            
             break;

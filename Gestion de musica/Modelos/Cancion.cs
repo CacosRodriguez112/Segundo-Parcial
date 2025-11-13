@@ -10,13 +10,6 @@
         // Constructor
         public Cancion(string nombre, string artista, int duracionSegundos)
         {
-            if (string.IsNullOrWhiteSpace(nombre)) 
-                throw new ArgumentException("No puede estar vacio");
-            if (string.IsNullOrWhiteSpace(artista)) 
-                throw new ArgumentException("Tampoco puede estar vacio");
-            if (duracionSegundos < 0) 
-                throw new ArgumentOutOfRangeException("nmms");
-
             Nombre = nombre;
             Artista = artista;
             DuracionSegundos = duracionSegundos;

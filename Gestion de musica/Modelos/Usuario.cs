@@ -7,9 +7,6 @@
 
         public Usuario(string nombre)
         {
-            if (string.IsNullOrWhiteSpace(nombre)) 
-                throw new ArgumentException("Como?");
-           
             Nombre = nombre;
             ListasReproduccion = new Dictionary<string, List<Cancion>>(StringComparer.OrdinalIgnoreCase);
         }
@@ -18,7 +15,7 @@
         {
             if (string.IsNullOrWhiteSpace(nombreLista))
             {
-                mensaje = "Necesito un nombre de la lista.";
+                mensaje = "Neta?";
                 return false;
             }
 

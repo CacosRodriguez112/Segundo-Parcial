@@ -19,15 +19,16 @@ namespace MusicManager.Gestores
             CancionesDisponibles.Add(cancion);
         }
 
-        public List<Cancion> BuscarPorNombre(string ya)
+        public List<Cancion> BuscarPorNombre(string nombre)
         {
-            if (string.IsNullOrWhiteSpace(ya)) 
+            if (string.IsNullOrWhiteSpace(nombre))
                 return new List<Cancion>();
 
             return CancionesDisponibles
-                .Where(c => c.Nombre.IndexOf(ya, StringComparison.OrdinalIgnoreCase) >= 0) // búsqueda sin distinción de mayúsculas/minúsculas
+                .Where(c => c.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
+
 
         // QuickSort por DuracionSegundos (ascendente)
         public void QuickSort(List<Cancion> lista, int low, int high)
