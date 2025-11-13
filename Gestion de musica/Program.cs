@@ -6,8 +6,7 @@ using MusicManager.Gestores;
 GestorCanciones gestor = new GestorCanciones();
 ServicioMusica servicioMusica = new ServicioMusica(gestor);
 
-// AGREGAR LAS 8 CANCIONES AL GESTOR (catálogo general)
-gestor.AgregarCancion(new Cancion("Amor Eterno", "Rocio Durcal", 342));
+gestor.AgregarCancion(new Cancion("Amor Eterno", "Rocío Dúrcal", 342));
 gestor.AgregarCancion(new Cancion("El Rey", "Vicente Fernández", 182));
 gestor.AgregarCancion(new Cancion("La Bikina", "Luis Miguel", 175));
 gestor.AgregarCancion(new Cancion("Ojala que te mueras", "Panteón Rococó", 224));
