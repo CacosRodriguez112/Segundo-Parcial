@@ -2,35 +2,27 @@
 using MusicManager.Sevice;
 using MusicManager.Gestores;
 
-
 // 1- Inicialización
 GestorCanciones gestor = new GestorCanciones();
 ServicioMusica servicioMusica = new ServicioMusica(gestor);
 
-
 gestor.AgregarCancion(new Cancion("Amor Eterno", "Rocío Dúrcal", 342));
 gestor.AgregarCancion(new Cancion("El Rey", "Vicente Fernández", 182));
 gestor.AgregarCancion(new Cancion("La Bikina", "Luis Miguel", 175));
-gestor.AgregarCancion(new Cancion("Ojalá que te mueras", "Panteón Rococó", 224));
+gestor.AgregarCancion(new Cancion("Ojala que te mueras", "Panteón Rococó", 224));
 gestor.AgregarCancion(new Cancion("Como la flor", "Selena", 193));
-gestor.AgregarCancion(new Cancion("La ingrata", "Café Tacvba", 201));
-gestor.AgregarCancion(new Cancion("Eres", "Café Tacvba", 258));
+gestor.AgregarCancion(new Cancion("La ingrata", "Cafe Tacvba", 201));
+gestor.AgregarCancion(new Cancion("Eres", "Cafe Tacvba", 258));
 gestor.AgregarCancion(new Cancion("Si nos dejan", "Luis Miguel", 156));
-
 
 // 2- Registro Usuario
 Console.WriteLine("--- REGISTRO DE USUARIO ---");
 Console.Write("Por favor, ingrese su nombre de usuario: ");
 
 string nombreUsuario = Console.ReadLine() ?? "";
-if (string.IsNullOrWhiteSpace(nombreUsuario))
-{
-    nombreUsuario = "Usuario_Por_Defecto";
-    Console.WriteLine($"Como no ingresaste nada, te llamaras: {nombreUsuario}");
-}
+
 servicioMusica.RegistrarUsuario(nombreUsuario);
 Console.WriteLine($"\n¡Bienvenido, {nombreUsuario}!");
-
 
 //3- Creación Lista
 Console.Write("\nIngrese el nombre de su primera lista de reproducción: ");
@@ -38,28 +30,27 @@ Console.Write("\nIngrese el nombre de su primera lista de reproducción: ");
 string nombreLista = Console.ReadLine() ?? "";
 
 Usuario usuario = servicioMusica.BuscarUsuario(nombreUsuario);
-if (usuario.CrearListaReproduccion(nombreLista, out string mensajeCrearLista))
+if (usuario.CrearListaReproduccion(nombreLista, out string mensajeLista))
 {
-    Console.WriteLine(mensajeCrearLista);
+    Console.WriteLine(mensajeLista);
 }
 else
 {
-    Console.WriteLine(mensajeCrearLista);
-    nombreLista = "Lista_Por_Defecto";
+    Console.WriteLine(mensajeLista);
+    nombreLista = "Lista por defecto";
     usuario.CrearListaReproduccion(nombreLista, out _);
-    Console.WriteLine($"Se ha creado una lista por defecto llamada: {nombreLista}");
+    Console.WriteLine($"Se ha creado una lista por defecto llamada '{nombreLista}'.");
 }
-
-
 
 // 4- Menu Principal
 bool salir = false;
+int contadorCancionesLista = 0; // Contador para las canciones en la lista actual
 
 while (!salir)
 {
     Console.WriteLine("\n--- MENÚ PRINCIPAL ---");
     Console.WriteLine($"Usuario actual: {usuario.Nombre}");
-    Console.WriteLine($"Lista actual: {nombreLista} ({gestor.CancionesDisponibles.Count} canciones)");
+    Console.WriteLine($"Lista actual: {nombreLista} ({contadorCancionesLista} canciones)");
     Console.WriteLine("1. Buscar canciones para agregar a mi lista");
     Console.WriteLine("2. Ver mi lista de reproducción (ordenada por duración)");
     Console.WriteLine("3. Ver todas las canciones disponibles");
@@ -73,53 +64,84 @@ while (!salir)
     switch (opcion)
     {
         case "1":
-            Console.Write("Término de búsqueda: ");
-            string termino = Console.ReadLine() ?? "";
-            var resultados = gestor.BuscarPorNombre(termino); // Obtener resultados de búsqueda
+            //Buscar canciones en el GESTOR (catálogo general)
+            Console.Write("Ingrese el nombre de la canción a buscar: ");
+            string Busqueda = Console.ReadLine() ?? "";
 
+            var resultados = gestor.BuscarPorNombre(Busqueda);
             if (resultados.Count == 0)
             {
-                Console.WriteLine("No se encontraron canciones.");
-                break;
-            }
-            Console.WriteLine("Canciones encontradas:");
-            for (int i = 0; i < resultados.Count; i++)
-            {
-                Console.WriteLine($"{i + 1}. {resultados[i]}");
-            }
-
-            Console.Write("Selecciona el número de la canción para agregar u otra tecla para cancelar: ");
-
-            if (!int.TryParse(Console.ReadLine(), out int sel) || sel > resultados.Count || sel < 0)
-            {
-                Console.WriteLine("Canceled");
-                break;
-            }
-
-            Console.Write("A qué lista la quieres agregar? ");
-            string listaDestino = Console.ReadLine() ?? "";
-            if (listaDestino != nombreLista)
-            {
-                Console.WriteLine("Solo puedes agregar a la lista actual.");
+                Console.WriteLine("No se encontraron canciones con ese nombre.");
             }
             else
             {
-                
+                Console.WriteLine("\nResultados de búsqueda:");
+                for (int i = 0; i < resultados.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1}. {resultados[i].Nombre} - {resultados[i].Artista} ({resultados[i].DuracionSegundos}s)");
+                }
+
+                Console.Write("\nSeleccione el número de canción para agregar (0 para cancelar): ");
+                if (int.TryParse(Console.ReadLine(), out int seleccion) && seleccion > 0 && seleccion <= resultados.Count)
+                {
+
+                    if (usuario.AgregarCancionALista(nombreLista, resultados[seleccion - 1], out string mensaje))
+                    {
+                        contadorCancionesLista++;
+                        Console.WriteLine(mensaje);
+                        Console.WriteLine($"Total en lista: {contadorCancionesLista}");
+                    }
+                    else
+                    {
+                        Console.WriteLine(mensaje);
+                    }
+                }
             }
-
-
-                break;
-        case "2":
-           
             break;
+
+        case "2":
+            // Ver mi lista de reproducción ordenada por duración
+            if (contadorCancionesLista == 0)
+            {
+                Console.WriteLine("La lista está vacía.");
+            }
+            else
+            {
+                // Obtener las canciones de la lista actual del usuario
+                if (usuario.ListasReproduccion.TryGetValue(nombreLista, out var listaCanciones))
+                {
+                    // Crear copia de la lista para ordenamiento
+                    List<Cancion> nuevaLista = new List<Cancion>(listaCanciones);
+
+                    // Ordenamiento por QuickSort
+                    Console.WriteLine("Lista de reproducción ordenada por duración (QuickSort):");
+                    gestor.QuickSort(nuevaLista, 0, nuevaLista.Count - 1);
+
+                    // Mostrar lista ordenada
+                    for (int i = 0; i < nuevaLista.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {nuevaLista[i].Nombre} - {nuevaLista[i].Artista} ({nuevaLista[i].DuracionSegundos}s)");
+                    }
+
+                    //Mostrar duración Total
+                    int duracionTotal = FunAux.CalcularDuracionTotal(nuevaLista);
+                    Console.WriteLine($"\nDuración total: {duracionTotal} segundos ({duracionTotal / 60}:{duracionTotal % 60:D2} minutos)");
+
+                }
+
+            }
+            break;
+
+
+
         case "3":
-        
+
             break;
         case "4":
-      
+
             break;
         case "5":
-        
+
             break;
         case "6":
             salir = true;
@@ -129,11 +151,15 @@ while (!salir)
             break;
     }
 }
-
-//Será que ahora sí ya?
-
-
-
-
-
-
+public class FunAux
+{
+    public static int CalcularDuracionTotal(List<Cancion> canciones)
+    {
+        int duracionTotal = 0;
+        foreach (var cancion in canciones)
+        {
+            duracionTotal += cancion.DuracionSegundos;
+        }
+        return duracionTotal;
+    }
+}

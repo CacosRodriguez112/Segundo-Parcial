@@ -13,19 +13,19 @@ namespace MusicManager.Gestores
 
         public void AgregarCancion(Cancion cancion)
         {
-            if (cancion == null) 
+            if (cancion == null)
                 throw new ArgumentNullException("no");
 
             CancionesDisponibles.Add(cancion);
         }
 
-        public List<Cancion> BuscarPorNombre(string nombre)
+        public List<Cancion> BuscarPorNombre(string ya)
         {
-            if (string.IsNullOrWhiteSpace(nombre))
+            if (string.IsNullOrWhiteSpace(ya))
                 return new List<Cancion>();
 
             return CancionesDisponibles
-                .Where(c => c.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase))
+                .Where(c => c.Nombre.IndexOf(ya, StringComparison.OrdinalIgnoreCase) >= 0) // búsqueda sin distinción de mayúsculas/minúsculas
                 .ToList();
         }
 
@@ -71,7 +71,7 @@ namespace MusicManager.Gestores
 
         public string MostrarCancionesDisponibles()
         {
-            if (CancionesDisponibles.Count == 0) 
+            if (CancionesDisponibles.Count == 0)
                 return "No hay rolas w.";
 
             var sb = new System.Text.StringBuilder(); // Usar StringBuilder para eficiencia
