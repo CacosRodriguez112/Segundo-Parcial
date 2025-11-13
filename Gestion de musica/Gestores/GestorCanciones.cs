@@ -48,7 +48,7 @@ namespace MusicManager.Gestores
 
         private int Partition(List<Cancion> lista, int low, int high) // Particiona la lista para QuickSort
         {
-            var pivot = lista[high].DuracionSegundos;
+            var pivot = lista[high].DuracionSegundos; // pivote generalmente es el último elemento 
             int i = low - 1;
             for (int j = low; j <= high - 1; j++)
             {
