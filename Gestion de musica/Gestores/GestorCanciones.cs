@@ -29,42 +29,42 @@ namespace MusicManager.Gestores
                 .ToList();
         }
 
-
-
         // QuickSort por DuracionSegundos (ascendente)
+
         public void QuickSort(List<Cancion> lista, int low, int high)
         {
-            if (lista == null) 
-                throw new ArgumentNullException("");
-            if (low < 0 || high >= lista.Count) { /* permitir que se use con (0, Count-1) normalmente */ } // Validar índices
+            if (lista == null || lista.Count == 0)
+                return;
 
-            if (low < high)
-            {
-                int pi = Partition(lista, low, high);
-                QuickSort(lista, low, pi - 1);
-                QuickSort(lista, pi + 1, high);
-            }
-        }
+            if (low >= high)
+                return;
 
-        private int Partition(List<Cancion> lista, int low, int high) // Particiona la lista para QuickSort
-        {
-            var pivot = lista[high].DuracionSegundos;
-            int i = low - 1;
-            for (int j = low; j <= high - 1; j++)
+            int pivotIndex = (low + high) / 2;
+            int pivotValue = lista[pivotIndex].DuracionSegundos;
+
+            int i = low, j = high;
+            while (i <= j)
             {
-                if (lista[j].DuracionSegundos <= pivot)
-                {
+                while (lista[i].DuracionSegundos < pivotValue)
                     i++;
+                while (lista[j].DuracionSegundos > pivotValue)
+                    j--;
+
+                if (i <= j)
+                {
                     Swap(lista, i, j);
+                    i++;
+                    j--;
                 }
             }
-            Swap(lista, i + 1, high);
-            return i + 1;
+
+            if (low < j) QuickSort(lista, low, j);
+            if (i < high) QuickSort(lista, i, high);
         }
 
-        private void Swap(List<Cancion> lista, int i, int j) // Intercambia dos elementos en la lista
+        private void Swap(List<Cancion> lista, int i, int j)
         {
-            var temp = lista[i];
+            Cancion temp = lista[i];
             lista[i] = lista[j];
             lista[j] = temp;
         }
@@ -79,7 +79,7 @@ namespace MusicManager.Gestores
             {
                 sb.AppendLine($"{i + 1}. {CancionesDisponibles[i].ToString()}");
             }
-            return sb.ToString(); // Devolver el string completo
-        }   
+            return sb.ToString().TrimEnd();
+        }
     }
 }
