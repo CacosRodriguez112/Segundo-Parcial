@@ -5,8 +5,6 @@ VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GestionDeMusica", "GestionDeMusica.csproj", "{87C6F28D-3659-9AB1-27DE-E90E73ACBCC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject2", "..\TestProject2\TestProject2.csproj", "{AEFB954E-280D-43AB-A1B3-13B7069831F2}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{87C6F28D-3659-9AB1-27DE-E90E73ACBCC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87C6F28D-3659-9AB1-27DE-E90E73ACBCC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87C6F28D-3659-9AB1-27DE-E90E73ACBCC2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEFB954E-280D-43AB-A1B3-13B7069831F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEFB954E-280D-43AB-A1B3-13B7069831F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEFB954E-280D-43AB-A1B3-13B7069831F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEFB954E-280D-43AB-A1B3-13B7069831F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
