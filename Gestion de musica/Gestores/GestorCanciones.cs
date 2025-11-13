@@ -19,58 +19,53 @@ namespace MusicManager.Gestores
             CancionesDisponibles.Add(cancion);
         }
 
-        public List<Cancion> BuscarPorNombre(string ya)
+        public List<Cancion> BuscarPorNombre(string nombre)
         {
-            if (string.IsNullOrWhiteSpace(ya))
+            if (string.IsNullOrWhiteSpace(nombre))
                 return new List<Cancion>();
 
             return CancionesDisponibles
-                .Where(c => c.Nombre.IndexOf(ya, StringComparison.OrdinalIgnoreCase) >= 0) // búsqueda sin distinción de mayúsculas/minúsculas
+                .Where(c => c.Nombre.Contains(nombre, StringComparison.OrdinalIgnoreCase))
                 .ToList();
         }
 
-        // QuickSort por DuracionSegundos (ascendente)
 
+
+        // QuickSort por DuracionSegundos (ascendente)
         public void QuickSort(List<Cancion> lista, int low, int high)
         {
-            if (lista == null || lista.Count == 0)
-                return;
+            if (lista == null) 
+                throw new ArgumentNullException(nameof(lista));
 
-            if (low >= high)
-                return;
+            if (low < 0 || high >= lista.Count) { /* permitir que se use con (0, Count-1) normalmente */ }
 
-            int pivotIndex = (low + high) / 2;
-            int pivotValue = lista[pivotIndex].DuracionSegundos;
-
-            int i = low, j = high;
-            while (i <= j)
+            if (low < high)
             {
-                while (lista[i].DuracionSegundos < pivotValue)
-                    i++;
-                while (lista[j].DuracionSegundos > pivotValue)
-                    j--;
+                int pi = Partition(lista, low, high);
+                QuickSort(lista, low, pi - 1);
+                QuickSort(lista, pi + 1, high);
+            }
+        }
 
-        private int Partition(List<Cancion> lista, int low, int high) // Particiona la lista para QuickSort
+        private int Partition(List<Cancion> lista, int low, int high)
         {
-            var pivot = lista[high].DuracionSegundos; // pivote generalmente es el último elemento 
+            var pivot = lista[high].DuracionSegundos;
             int i = low - 1;
             for (int j = low; j <= high - 1; j++)
             {
                 if (lista[j].DuracionSegundos <= pivot)
                 {
-                    Swap(lista, i, j);
                     i++;
-                    j--;
+                    Swap(lista, i, j);
                 }
             }
-
-            if (low < j) QuickSort(lista, low, j);
-            if (i < high) QuickSort(lista, i, high);
+            Swap(lista, i + 1, high);
+            return i + 1;
         }
 
         private void Swap(List<Cancion> lista, int i, int j)
         {
-            Cancion temp = lista[i];
+            var temp = lista[i];
             lista[i] = lista[j];
             lista[j] = temp;
         }
@@ -85,7 +80,7 @@ namespace MusicManager.Gestores
             {
                 sb.AppendLine($"{i + 1}. {CancionesDisponibles[i].ToString()}");
             }
-            return sb.ToString().TrimEnd();
+            return sb.ToString();
         }
     }
 }

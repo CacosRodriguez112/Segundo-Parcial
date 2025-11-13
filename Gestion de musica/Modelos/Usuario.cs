@@ -7,9 +7,6 @@
 
         public Usuario(string nombre)
         {
-            if (string.IsNullOrWhiteSpace(nombre))
-                throw new ArgumentException("Como?");
-
             Nombre = nombre;
             ListasReproduccion = new Dictionary<string, List<Cancion>>(StringComparer.OrdinalIgnoreCase);
         }
@@ -18,10 +15,11 @@
         {
             if (string.IsNullOrWhiteSpace(nombreLista))
             {
-                mensaje = "Necesito un nombre de la lista.";
-                return false;
+                nombreLista = "Lista_Por_Defecto";
+                ListasReproduccion[nombreLista] = new List<Cancion>();
+                mensaje = $"Lista '{nombreLista}' creada mai.";
+                return true;
             }
-
             if (ListasReproduccion.ContainsKey(nombreLista))
             {
                 mensaje = $"La lista '{nombreLista}' ya existe.";
@@ -35,14 +33,7 @@
 
         public bool AgregarCancionALista(string nombreLista, Cancion cancion, out string mensaje)
         {
-            if (cancion == null)
-                throw new ArgumentNullException("Nada");
-
-            if (!ListasReproduccion.TryGetValue(nombreLista, out var lista))
-            {
-                mensaje = $"La lista '{nombreLista}' no existe.";
-                return false;
-            }
+            var lista = ListasReproduccion[nombreLista];
 
             if (lista.Any(c => c.Nombre.Equals(cancion.Nombre, StringComparison.OrdinalIgnoreCase) &&
                                c.Artista.Equals(cancion.Artista, StringComparison.OrdinalIgnoreCase)))
