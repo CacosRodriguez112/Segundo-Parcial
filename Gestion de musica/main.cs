@@ -85,8 +85,7 @@ while (!salir)
                     break;
                 }
 
-                Console.Write("A qué lista la quieres agregar? ");
-                string listaDestino = Console.ReadLine() ?? "";
+                string listaDestino = nombreLista;
 
                 if (usuario.AgregarCancionALista(listaDestino, resultados[seleccion - 1], out var mensajeAgregar))
                     Console.WriteLine(mensajeAgregar);
