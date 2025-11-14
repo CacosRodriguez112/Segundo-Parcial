@@ -43,13 +43,13 @@ Console.WriteLine(mensajes);
 
 // 4- Menu Principal
 bool salir = false;
-
+int contadorCancionesLista = 0;
 
 while (!salir)
 {
     Console.WriteLine("\n--- MENÚ PRINCIPAL ---");
     Console.WriteLine($"Usuario actual: {usuario.Nombre}");
-    Console.WriteLine($"Lista actual: {nombreLista} ({gestor.CancionesDisponibles.Count} canciones)");
+    Console.WriteLine($"Lista actual: {nombreLista} ({contadorCancionesLista} canciones)");
     Console.WriteLine("1. Buscar canciones para agregar a mi lista");
     Console.WriteLine("2. Ver mi lista de reproducción (ordenada por duración)");
     Console.WriteLine("3. Ver todas las canciones disponibles");
@@ -88,35 +88,36 @@ while (!salir)
                 string listaDestino = nombreLista;
 
                 if (usuario.AgregarCancionALista(listaDestino, resultados[seleccion - 1], out var mensajeAgregar))
-                    Console.WriteLine(mensajeAgregar);
+                    contadorCancionesLista++;
+                Console.WriteLine(mensajeAgregar);
             }
             break;
 
         case "2":
-                // Obtener las canciones de la lista actual del usuario
-                if (usuario.ListasReproduccion.TryGetValue(nombreLista, out var listaCanciones))
+            // Obtener las canciones de la lista actual del usuario
+            if (usuario.ListasReproduccion.TryGetValue(nombreLista, out var listaCanciones))
+            {
+                // Crear copia de la lista para ordenamiento
+                List<Cancion> nuevaLista = new List<Cancion>(listaCanciones);
+
+                //Quicksort
+                Console.WriteLine("\nLista de reproducción ordenada por duración (QuickSort):");
+                gestor.QuickSort(nuevaLista, 0, nuevaLista.Count - 1);
+
+                //Mostra la lista ordenada
+                for (int i = 0; i < nuevaLista.Count; i++)
                 {
-                    // Crear copia de la lista para ordenamiento
-                    List<Cancion> nuevaLista = new List<Cancion>(listaCanciones);
-
-                    //Quicksort
-                    Console.WriteLine("\nLista de reproducción ordenada por duración (QuickSort):");
-                    gestor.QuickSort(nuevaLista, 0, nuevaLista.Count - 1);
-
-                    //Mostra la lista ordenada
-                    for (int i = 0; i < nuevaLista.Count; i++)
-                    {
-                        Console.WriteLine($"{i + 1}. {nuevaLista[i].Nombre} - {nuevaLista[i].Artista} ({nuevaLista[i].DuracionSegundos}s)");
-                    }
-
-                    //Duración total
-                    int duracionTotal = FunAux.CalcularDuracionTotal(nuevaLista);
-                    Console.WriteLine($"\nDuración total: {duracionTotal} segundos ({duracionTotal / 60}:{duracionTotal % 60:D2} minutos)");
+                    Console.WriteLine($"{i + 1}. {nuevaLista[i].Nombre} - {nuevaLista[i].Artista} ({nuevaLista[i].DuracionSegundos}s)");
                 }
-                else
-                {
-                    Console.WriteLine("No se encontró la lista de reproducción.");
-                }
+
+                //Duración total
+                int duracionTotal = FunAux.CalcularDuracionTotal(nuevaLista);
+                Console.WriteLine($"\nDuración total: {duracionTotal} segundos ({duracionTotal / 60}:{duracionTotal % 60:D2} minutos)");
+            }
+            else
+            {
+                Console.WriteLine("No se encontró la lista de reproducción.");
+            }
             break;
 
         case "3":
@@ -137,6 +138,7 @@ while (!salir)
 
                 // Actualizar la lista actual a la nueva lista creada
                 nombreLista = nuevaListaNombre;
+                contadorCancionesLista = 0;
 
                 Console.WriteLine($"Lista actual cambiada a: '{nombreLista}'");
             }
@@ -171,6 +173,7 @@ while (!salir)
                     seleccionLista > 0 && seleccionLista <= usuario.ListasReproduccion.Count)
                 {
                     nombreLista = usuario.ListasReproduccion.Keys.ElementAt(seleccionLista - 1);
+                    contadorCancionesLista = usuario.ListasReproduccion[nombreLista].Count;
                     Console.WriteLine($"Lista actual cambiada a: '{nombreLista}'");
                 }
                 else
